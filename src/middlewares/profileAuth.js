@@ -3,15 +3,18 @@ const User = require("../Database/models/user");
 
 const profileAuth = async (req, res, next) => {
   try {
-    let { email } = req.body;
-    let user = await User.findOne({ email: email });
-    if (!user) {
-      return res.status(400).send("Invalid Credetails");
+    let token = req?.cookies?.token;
+    if (!token) {
+      return res.status(401).send("User not found");
     }
-    let token = req.cookies.token;
-    let verifyToken = jwt.verify(token, "Sandeep@016");
-    if (!verifyToken) {
+    let decoded = jwt.verify(token, "Sandeep@016");
+    console.log("decoded", decoded);
+    if (!decoded) {
       return res.status(400).send("Invalid user");
+    }
+    const user = await User.findById(decoded._id);
+    if (!user) {
+      return res.status(401).send("User not found");
     }
     req.user = user;
     next();
