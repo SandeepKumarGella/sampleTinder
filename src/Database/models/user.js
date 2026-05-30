@@ -52,6 +52,10 @@ const userSchema = mongoose.Schema(
       type: String,
       default: "Just want to check how the app is working!",
     },
+    photoUrl: {
+      type: String,
+      default: "https://www.example.com/default-profile-pic.jpg",
+    },
     age: {
       type: Number,
       required: true,

@@ -21,7 +21,7 @@ profileRouter.get("/profile/:id", async (req, res) => {
 });
 
 profileRouter.patch("/editProfile", profileAuth, async (req, res) => {
-  const editableFields = ["skills", "about"];
+  const editableFields = ["skills", "about", "photoUrl"];
 
   const fieldsToUpdate = Object.keys(req.body)
     .filter((key) => editableFields.includes(key))
@@ -34,7 +34,7 @@ profileRouter.patch("/editProfile", profileAuth, async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id, // current user
       { $set: fieldsToUpdate },
-      //   { new: true, runValidators: true },
+      { new: true, runValidators: true },
     );
 
     await updatedUser.save();
