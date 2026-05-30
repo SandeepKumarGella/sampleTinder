@@ -37,7 +37,10 @@ authRouter.post("/signin", userAuth, (req, res) => {
   try {
     res
       .status(200)
-      .send(`Hi ${req?.user?.firstName} Welcome to the Dev Tinder`);
+      .json({
+        message: `Hi ${req?.user?.firstName} Welcome to the Dev Tinder`,
+        user: req?.user,
+      });
   } catch (err) {
     res.status(400).send("Error " + err.message);
   }
