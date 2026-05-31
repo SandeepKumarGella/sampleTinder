@@ -12,7 +12,16 @@ profileRouter.get("/profile", profileAuth, async (req, res) => {
   try {
     res.status(200).json({
       message: "user data fetched Successfully!",
-      userDetails: user,
+      userDetails: {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        photoUrl: user.photoUrl,
+        age: user.age,
+        skills: user.skills,
+        about: user.about,
+        gender: user.gender,
+      },
     });
   } catch (err) {
     res.status(400).send("Error " + err.message);
@@ -47,7 +56,6 @@ profileRouter.patch("/editProfile", profileAuth, async (req, res) => {
     await updatedUser.save();
     res.status(200).json({
       message: "user updated successfully",
-      updatedDetails: updatedUser,
     });
   } catch (err) {
     res.status(400).send("Error " + err.message);
@@ -82,7 +90,6 @@ profileRouter.patch("/forgotPassword", async (req, res) => {
     await updatedPassword.save();
     res.status(200).json({
       message: "password updated successfully!",
-      newPassword: updatedPassword,
     });
   } catch (err) {
     res.status(400).send("Error " + err.message);

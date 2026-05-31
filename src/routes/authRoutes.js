@@ -45,10 +45,23 @@ authRouter.post("/signup", async (req, res) => {
 });
 
 authRouter.post("/signin", userAuth, (req, res) => {
+  let user = req.user;
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
   try {
     res.status(200).json({
       message: `Hi ${req?.user?.firstName} Welcome to the Dev Tinder`,
-      user: req?.user,
+      user: {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        photoUrl: user.photoUrl,
+        age: user.age,
+        skills: user.skills,
+        about: user.about,
+        gender: user.gender,
+      },
     });
   } catch (err) {
     res.status(400).send("Error " + err.message);

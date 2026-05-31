@@ -23,7 +23,7 @@ userRouter.get("/user/requests/received", profileAuth, async (req, res) => {
         toUserId: loggedInUser._id,
         status: "interested",
       })
-      .populate("fromUserId", ["firstName", "lastName", "age", "skillset"]);
+      .populate("fromUserId", USER_DB_SAFE_DATA);
 
     if (!connectionRequests) {
       return res.status(404).send("User not Found");

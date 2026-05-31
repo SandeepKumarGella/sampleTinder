@@ -2,14 +2,23 @@ const express = require("express");
 const requestRouter = express.Router();
 const ConnectionRequest = require("../Database/models/connectionRequest");
 const profileAuth = require("../middlewares/profileAuth");
-
+let USER_DB_SAFE_DATA = [
+  "firstName",
+  "lastName",
+  "age",
+  "skills",
+  "photoUrl",
+  "about",
+  "gender",
+];
 requestRouter.post(
-  "/request/send/:status/:id",
+  "/request/send/:status/:toUserId",
   profileAuth,
   async (req, res) => {
+    const user = req.user;
     try {
-      let fromUserId = req.user._id;
-      let toUserId = req.params.id;
+      let fromUserId = user._id;
+      let toUserId = req.params.toUserId;
       let status = req.params.status;
 
       const allowedStatus = ["ignored", "interested"];
@@ -32,11 +41,16 @@ requestRouter.post(
         toUserId,
         status,
       });
+
       const data = await requestConnect.save();
 
+      const connectionData = await ConnectionRequest.findById(data._id)
+        .populate("fromUserId", USER_DB_SAFE_DATA)
+        .populate("toUserId", USER_DB_SAFE_DATA);
+
       res.status(200).json({
-        message: "connection api trigger",
-        connections: data,
+        message: "connection request sent successfully",
+        connections: connectionData,
       });
     } catch (err) {
       res.status(400).send("Error: " + err.message);
