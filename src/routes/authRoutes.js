@@ -5,14 +5,23 @@ const bcrypt = require("bcrypt");
 const userAuth = require("../middlewares/userAuth");
 
 authRouter.post("/signup", async (req, res) => {
-  const { firstName, lastName, email, password, age, skills, gender } =
-    req.body;
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    age,
+    skills,
+    gender,
+    about,
+    photoUrl,
+  } = req.body;
   const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return res.status(400).send("User already exists");
+  }
   const encryptedPassword = await bcrypt.hash(password, 10);
   try {
-    if (existingUser) {
-      return res.status(400).send("User already exists");
-    }
     const user = new User({
       firstName,
       lastName,
@@ -21,6 +30,8 @@ authRouter.post("/signup", async (req, res) => {
       age,
       skills,
       gender,
+      about,
+      photoUrl,
     });
     await user.save();
     const userId = await User.findOne({ email });
@@ -35,12 +46,10 @@ authRouter.post("/signup", async (req, res) => {
 
 authRouter.post("/signin", userAuth, (req, res) => {
   try {
-    res
-      .status(200)
-      .json({
-        message: `Hi ${req?.user?.firstName} Welcome to the Dev Tinder`,
-        user: req?.user,
-      });
+    res.status(200).json({
+      message: `Hi ${req?.user?.firstName} Welcome to the Dev Tinder`,
+      user: req?.user,
+    });
   } catch (err) {
     res.status(400).send("Error " + err.message);
   }

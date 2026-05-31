@@ -5,16 +5,16 @@ const profileAuth = async (req, res, next) => {
   try {
     let token = req?.cookies?.token;
     if (!token) {
-      return res.status(401).send("User not found");
+      return res.status(401).send("Unauthorized user!");
     }
     let decoded = jwt.verify(token, "Sandeep@016");
-    console.log("decoded", decoded);
+
     if (!decoded) {
       return res.status(400).send("Invalid user");
     }
     const user = await User.findById(decoded._id);
     if (!user) {
-      return res.status(401).send("User not found");
+      return res.status(404).send("User not Found!");
     }
     req.user = user;
     next();

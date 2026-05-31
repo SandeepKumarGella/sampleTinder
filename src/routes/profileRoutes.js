@@ -4,9 +4,8 @@ const profileAuth = require("../middlewares/profileAuth");
 const profileRouter = express.Router();
 const bcrypt = require("bcrypt");
 
-profileRouter.get("/profile/:id", async (req, res) => {
-  const id = req.params.id;
-  const user = await User.findOne({ _id: id });
+profileRouter.get("/profile", profileAuth, async (req, res) => {
+  const user = req.user;
   if (!user) {
     return res.status(400).send("user not found!");
   }
@@ -21,7 +20,15 @@ profileRouter.get("/profile/:id", async (req, res) => {
 });
 
 profileRouter.patch("/editProfile", profileAuth, async (req, res) => {
-  const editableFields = ["skills", "about", "photoUrl"];
+  const editableFields = [
+    "firstName",
+    "lastName",
+    "gender",
+    "age",
+    "skills",
+    "about",
+    "photoUrl",
+  ];
 
   const fieldsToUpdate = Object.keys(req.body)
     .filter((key) => editableFields.includes(key))

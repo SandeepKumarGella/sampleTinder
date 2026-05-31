@@ -54,7 +54,8 @@ const userSchema = mongoose.Schema(
     },
     photoUrl: {
       type: String,
-      default: "https://www.example.com/default-profile-pic.jpg",
+      default:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTElMfAYbjDxwoQmFvxE1dP_SN6r4opkdgChQ&s",
     },
     age: {
       type: Number,

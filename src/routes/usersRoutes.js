@@ -5,7 +5,15 @@ const connectionRequest = require("../Database/models/connectionRequest");
 const User = require("../Database/models/user");
 const ConnectionRequest = require("../Database/models/connectionRequest");
 
-let USER_DB_SAFE_DATA = ["firstName", "lastName", "age", "skills"];
+let USER_DB_SAFE_DATA = [
+  "firstName",
+  "lastName",
+  "age",
+  "skills",
+  "photoUrl",
+  "about",
+  "gender",
+];
 //get all pending connection request for loggedIn User
 userRouter.get("/user/requests/received", profileAuth, async (req, res) => {
   try {
