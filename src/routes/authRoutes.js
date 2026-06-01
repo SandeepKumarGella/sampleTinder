@@ -34,10 +34,29 @@ authRouter.post("/signup", async (req, res) => {
       photoUrl,
     });
     await user.save();
-    const userId = await User.findOne({ email });
+    const userData = await User.findOne({ email });
+    let token = await jwt.sign({ _id: userData?._id }, "Sandeep@016", {
+      expiresIn: "1h",
+    });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 1000, // 1 hour
+      secure: false, // true in production (HTTPS)
+    });
+
     res.status(200).json({
       message: "user created successfully",
-      userId: userId?._id,
+      user: {
+        _id: userData._id,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        photoUrl: userData.photoUrl,
+        age: userData.age,
+        skills: userData.skills,
+        about: userData.about,
+        gender: userData.gender,
+      },
     });
   } catch (err) {
     res.status(400).send("Error: " + err.message);
