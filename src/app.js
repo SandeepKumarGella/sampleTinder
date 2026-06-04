@@ -6,6 +6,9 @@ const profileRouter = require("./routes/profileRoutes");
 const requestRouter = require("./routes/requestRoutes");
 const userRouter = require("./routes/usersRoutes");
 const cors = require("cors");
+const http = require("http");
+const initializeSocket = require("./utils/socket");
+const chatRouter = require("./routes/chatRouter");
 
 const app = express();
 app.use(
@@ -20,6 +23,10 @@ app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
+app.use("/", chatRouter);
+
+const server = http.createServer(app);
+initializeSocket(server);
 
 app.use("/", (req, res) => {
   res.status(200).send("Welcome to Home page");
@@ -28,7 +35,7 @@ app.use("/", (req, res) => {
 dbConnect()
   .then(() => {
     console.log("Database Connected Successfully");
-    app.listen(3000, () => {
+    server.listen(3000, () => {
       console.log(`Server Running Successfully`);
     });
   })
